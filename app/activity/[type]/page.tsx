@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RefreshCw, AlertCircle } from "lucide-react";
 import { supabase, type Media } from "@/lib/supabase";
 
+// Mark as dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 type ActivityType = "tv-host" | "event-speaker" | "conference-speaker" | "team-building" | "music-fest";
 
 type ThemeConfig = {
@@ -112,6 +115,12 @@ export default function ActivityDetailPage() {
     }
 
     const fetchMedia = async () => {
+      if (!supabase) {
+        setError("Supabase not configured");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);

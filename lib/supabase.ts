@@ -1,13 +1,26 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+// Create Supabase client only if environment variables are available
+// This prevents build-time errors on Vercel
+let supabaseClient: SupabaseClient | null = null;
+
+if (supabaseUrl && supabaseAnonKey) {
+  supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Export supabase client (will be null if env vars are missing)
+export const supabase = supabaseClient;
+
+// Helper function to get Supabase client with error handling
+export function getSupabase(): SupabaseClient {
+  if (!supabaseClient) {
+    throw new Error('Supabase client not initialized. Please check your environment variables.');
+  }
+  return supabaseClient;
+}
 
 export type Booking = {
   id: number;

@@ -27,6 +27,13 @@ export default function BookingForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!supabase) {
+      setErrorMessage("Supabase not configured");
+      setIsSubmitting(false);
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
     setErrorMessage("");

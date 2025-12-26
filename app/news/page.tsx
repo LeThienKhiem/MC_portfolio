@@ -6,6 +6,9 @@ import { motion } from "framer-motion";
 import { supabase, type News } from "@/lib/supabase";
 import { RefreshCw } from "lucide-react";
 
+// Mark as dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 // Fallback images for news without thumbnails
 const fallbackImages = [
   "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1974&auto=format&fit=crop",
@@ -20,6 +23,12 @@ export default function News() {
 
   useEffect(() => {
     const fetchNews = async () => {
+      if (!supabase) {
+        setError("Supabase not configured");
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);

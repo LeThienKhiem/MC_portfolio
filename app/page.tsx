@@ -7,6 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Calendar, Mic, Video, Users, Sparkles, Tv, Music } from "lucide-react";
 import { supabase, type News } from "@/lib/supabase";
 
+// Mark as dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 type ActivityItem = {
   id: number;
   image: string;
@@ -110,6 +113,12 @@ export default function Home() {
 
   useEffect(() => {
     const fetchNews = async () => {
+      if (!supabase) {
+        setLoadingNews(false);
+        setNewsError("Supabase not configured");
+        return;
+      }
+
       try {
         setLoadingNews(true);
         setNewsError(null);

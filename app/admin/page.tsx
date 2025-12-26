@@ -3,6 +3,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { supabase, type Booking, type Media, type News } from "@/lib/supabase";
+
+// Mark as dynamic to prevent static generation issues
+export const dynamic = 'force-dynamic';
 import { isAuthenticated, clearAuth } from "@/lib/auth";
 import {
   LayoutDashboard,
@@ -155,6 +158,12 @@ function BookingsTab() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchBookings = useCallback(async () => {
+    if (!supabase) {
+      setError("Supabase not configured");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -177,6 +186,8 @@ function BookingsTab() {
   useEffect(() => {
     fetchBookings();
 
+    if (!supabase) return;
+
     // Real-time subscription
     const channel = supabase
       .channel("bookings-changes")
@@ -194,11 +205,18 @@ function BookingsTab() {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (supabase) {
+        supabase.removeChannel(channel);
+      }
     };
   }, [fetchBookings]);
 
   const markAsFinished = async (id: number) => {
+    if (!supabase) {
+      alert("Supabase not configured");
+      return;
+    }
+
     try {
       const { error: updateError } = await supabase
         .from("bookings")
@@ -369,6 +387,12 @@ function MediaTab() {
   });
 
   const fetchMedia = useCallback(async () => {
+    if (!supabase) {
+      setError("Supabase not configured");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -414,6 +438,11 @@ function MediaTab() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!supabase) {
+      setError("Supabase not configured");
+      return;
+    }
+
     if (!selectedFile) {
       setError("Please select a file to upload");
       return;
@@ -478,6 +507,11 @@ function MediaTab() {
 
   const deleteMedia = async (id: number) => {
     if (!confirm("Are you sure you want to delete this media?")) return;
+
+    if (!supabase) {
+      alert("Supabase not configured");
+      return;
+    }
 
     try {
       // Get media item to extract file path
@@ -759,6 +793,12 @@ function NewsTab() {
   });
 
   const fetchNews = useCallback(async () => {
+    if (!supabase) {
+      setError("Supabase not configured");
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
@@ -784,6 +824,12 @@ function NewsTab() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!supabase) {
+      setError("Supabase not configured");
+      return;
+    }
+
     try {
       setError(null);
 
@@ -806,6 +852,11 @@ function NewsTab() {
 
   const deleteNews = async (id: number) => {
     if (!confirm("Are you sure you want to delete this news item?")) return;
+
+    if (!supabase) {
+      alert("Supabase not configured");
+      return;
+    }
 
     try {
       const { error: deleteError } = await supabase.from("news").delete().eq("id", id);
