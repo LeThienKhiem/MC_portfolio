@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RefreshCw, AlertCircle } from "lucide-react";
 import { supabase, type Media } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mark as dynamic to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -94,6 +95,7 @@ const categoryMapping: Record<ActivityType, string> = {
 };
 
 export default function ActivityDetailPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const router = useRouter();
   const type = params?.type as ActivityType;
@@ -104,8 +106,25 @@ export default function ActivityDetailPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const theme = themeConfig[type] || themeConfig["conference-speaker"];
-  const title = activityTitles[type] || "Activity";
-  const description = activityDescriptions[type] || "";
+  
+  const activityTitleMap: Record<ActivityType, string> = {
+    "tv-host": t("activity.tvHost"),
+    "event-speaker": t("activity.eventMaster"),
+    "conference-speaker": t("activity.conferenceSpeaker"),
+    "team-building": t("activity.teamBuilding"),
+    "music-fest": t("activity.musicEvents"),
+  };
+
+  const activityDescMap: Record<ActivityType, string> = {
+    "tv-host": t("activity.tvHostDesc"),
+    "event-speaker": t("activity.eventMasterDesc"),
+    "conference-speaker": t("activity.conferenceSpeakerDesc"),
+    "team-building": t("activity.teamBuildingDesc"),
+    "music-fest": t("activity.musicEventsDesc"),
+  };
+
+  const title = activityTitleMap[type] || "Activity";
+  const description = activityDescMap[type] || "";
   const category = categoryMapping[type] || "";
 
   useEffect(() => {
@@ -176,7 +195,7 @@ export default function ActivityDetailPage() {
           }}
         >
           <ArrowLeft className="w-5 h-5" />
-          Back to Home
+          {t("activity.back")}
         </Link>
 
         {/* Hero Section */}
@@ -209,7 +228,7 @@ export default function ActivityDetailPage() {
               className="w-8 h-8 animate-spin mx-auto mb-4"
               style={{ color: theme.textColor }}
             />
-            <p style={{ color: theme.textColor, opacity: 0.7 }}>Loading gallery...</p>
+            <p style={{ color: theme.textColor, opacity: 0.7 }}>{t("activity.loading")}</p>
           </div>
         ) : error ? (
           <div className="text-center py-20">
@@ -217,12 +236,12 @@ export default function ActivityDetailPage() {
               className="w-8 h-8 mx-auto mb-4"
               style={{ color: theme.textColor }}
             />
-            <p style={{ color: theme.textColor, opacity: 0.7 }}>{error}</p>
+            <p style={{ color: theme.textColor, opacity: 0.7 }}>{error || t("activity.error")}</p>
           </div>
         ) : media.length === 0 ? (
           <div className="text-center py-20">
             <p style={{ color: theme.textColor, opacity: 0.7 }}>
-              No images available for this activity yet.
+              {t("activity.empty")}
             </p>
           </div>
         ) : (

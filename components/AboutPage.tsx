@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Instagram, Facebook, Twitter, Youtube, Linkedin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AboutPage() {
+  const { t } = useLanguage();
+  
   return (
     <div className="min-h-screen pt-20 px-4 pb-20" style={{ backgroundColor: "#F2E9E4" }}>
       <div className="max-w-7xl mx-auto">
@@ -70,22 +73,8 @@ export default function AboutPage() {
                 textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
               }}
             >
-              ABOUT ME
+              {t("about.title")}
             </motion.h1>
-
-            {/* Alternative: DAO DUY headline (commented out, can be used instead) */}
-            {/* <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="font-playfair text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-none"
-              style={{
-                color: "#0D0D0D",
-                textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
-              }}
-            >
-              DAO DUY
-            </motion.h1> */}
 
             {/* Role Badge */}
             <motion.div
@@ -102,7 +91,7 @@ export default function AboutPage() {
                   border: "1px solid #BFBCBA",
                 }}
               >
-                Professional MC / TV Host / Event Speaker
+                {t("about.role")}
               </span>
             </motion.div>
 
@@ -117,30 +106,19 @@ export default function AboutPage() {
                 className="text-lg leading-relaxed"
                 style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
               >
-                With over a decade of experience in the entertainment industry, MC Đào Duy has
-                established himself as one of Vietnam&apos;s most versatile and charismatic event hosts.
-                His dynamic presence and exceptional ability to connect with audiences have made him
-                a sought-after professional for everything from intimate corporate gatherings to
-                grand-scale televised events.
+                {t("about.bio1")}
               </p>
               <p
                 className="text-lg leading-relaxed"
                 style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
               >
-                Known for his impeccable timing, warm personality, and bilingual capabilities, Đào
-                Duy brings a unique blend of professionalism and genuine enthusiasm to every stage.
-                Whether hosting a luxury gala, moderating a tech conference, or leading a team
-                building event, he crafts memorable experiences that resonate long after the
-                curtains close.
+                {t("about.bio2")}
               </p>
               <p
                 className="text-lg leading-relaxed"
                 style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
               >
-                His versatility extends beyond traditional MC work—as a TV host, he has graced
-                screens across the nation, bringing stories to life with his engaging storytelling
-                and natural charisma. Each event becomes a canvas where professionalism meets
-                passion, creating moments that audiences remember.
+                {t("about.bio3")}
               </p>
             </motion.div>
 

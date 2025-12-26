@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Calendar, Mic, Video, Users, Sparkles, Tv, Music } from "lucide-react";
 import { supabase, type News } from "@/lib/supabase";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mark as dynamic to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -19,48 +20,7 @@ type ActivityItem = {
   className: string;
 };
 
-const activities: ActivityItem[] = [
-  {
-    id: 1,
-    image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/photo-1507679799987-c73779587ccf.jpg",
-    title: "TV Host",
-    short_description: "Bringing stories to life on screen with charisma and professionalism",
-    icon: <Tv className="w-6 h-6" />,
-    className: "h-[400px] md:h-[500px]", // Uniform height for all items
-  },
-  {
-    id: 2,
-    image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/Baja-Beach-Fest-anuncia-la-fecha-de-su-edicion-2026-y-lanza-primeros-boletos-1280x720.jpg",
-    title: "Event Master",
-    short_description: "Orchestrating unforgettable moments at galas and celebrations",
-    icon: <Mic className="w-6 h-6" />,
-    className: "h-[400px] md:h-[500px]", // Uniform height for all items
-  },
-  {
-    id: 3,
-    image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/getty_499517325_111264.webp",
-    title: "Conference Speaker",
-    short_description: "Engaging audiences with dynamic presentations and insights",
-    icon: <Users className="w-5 h-5" />,
-    className: "h-[400px] md:h-[500px]", // Uniform height for all items
-  },
-  {
-    id: 4,
-    image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/nhung-loi-ich-bat-ngo-khi-to-chuc-hoat-dong-team-building.webp",
-    title: "Team Building",
-    short_description: "Creating connections and energizing corporate gatherings",
-    icon: <Sparkles className="w-5 h-5" />,
-    className: "h-[400px] md:h-[500px]", // Uniform height for all items
-  },
-  {
-    id: 5,
-    image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/3RDtYmUyrVsJZdBzD3rb6E.jpg",
-    title: "Music Events",
-    short_description: "Setting the stage for memorable musical experiences",
-    icon: <Music className="w-5 h-5" />,
-    className: "h-[400px] md:h-[500px]", // Uniform height for all items
-  },
-];
+// Activities will be created inside component to use translations
 
 // Image Slider Component
 function ImageSlider() {
@@ -107,9 +67,53 @@ function ImageSlider() {
 }
 
 export default function Home() {
+  const { t } = useLanguage();
   const [news, setNews] = useState<News[]>([]);
   const [loadingNews, setLoadingNews] = useState(true);
   const [newsError, setNewsError] = useState<string | null>(null);
+
+  const activities: ActivityItem[] = [
+    {
+      id: 1,
+      image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/photo-1507679799987-c73779587ccf.jpg",
+      title: t("activity.tvHost"),
+      short_description: t("activity.tvHostDesc"),
+      icon: <Tv className="w-6 h-6" />,
+      className: "", // No fixed height for masonry layout
+    },
+    {
+      id: 2,
+      image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/Baja-Beach-Fest-anuncia-la-fecha-de-su-edicion-2026-y-lanza-primeros-boletos-1280x720.jpg",
+      title: t("activity.eventMaster"),
+      short_description: t("activity.eventMasterDesc"),
+      icon: <Mic className="w-6 h-6" />,
+      className: "", // No fixed height for masonry layout
+    },
+    {
+      id: 3,
+      image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/getty_499517325_111264.webp",
+      title: t("activity.conferenceSpeaker"),
+      short_description: t("activity.conferenceSpeakerDesc"),
+      icon: <Users className="w-5 h-5" />,
+      className: "", // No fixed height for masonry layout
+    },
+    {
+      id: 4,
+      image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/nhung-loi-ich-bat-ngo-khi-to-chuc-hoat-dong-team-building.webp",
+      title: t("activity.teamBuilding"),
+      short_description: t("activity.teamBuildingDesc"),
+      icon: <Sparkles className="w-5 h-5" />,
+      className: "", // No fixed height for masonry layout
+    },
+    {
+      id: 5,
+      image: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/3RDtYmUyrVsJZdBzD3rb6E.jpg",
+      title: t("activity.musicEvents"),
+      short_description: t("activity.musicEventsDesc"),
+      icon: <Music className="w-5 h-5" />,
+      className: "", // No fixed height for masonry layout
+    },
+  ];
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -167,7 +171,7 @@ export default function Home() {
             className="text-xl md:text-2xl mb-8"
             style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
           >
-            Professional • Elegant • Versatile
+            {t("home.subtitle")}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -188,7 +192,7 @@ export default function Home() {
                 e.currentTarget.style.backgroundColor = "#403F3D";
               }}
             >
-              Book Now
+              {t("home.bookNow")}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -206,77 +210,54 @@ export default function Home() {
             className="font-playfair text-4xl md:text-5xl font-bold mb-12 text-center"
             style={{ color: "#0D0D0D" }}
           >
-            What I Do
+            {t("home.whatIDo")}
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Masonry Layout Container for Activities ONLY */}
+          <div className="columns-1 md:columns-5 gap-4 space-y-4 px-4 md:px-0">
             {activities.map((activity, index) => {
-              // Map activity titles to route types
-              const routeMap: Record<string, string> = {
-                "TV Host": "tv-host",
-                "Event Master": "event-speaker",
-                "Conference Speaker": "conference-speaker",
-                "Team Building": "team-building",
-                "Music Events": "music-fest",
+              // Map activity IDs to route types
+              const routeMap: Record<number, string> = {
+                1: "tv-host",
+                2: "event-speaker",
+                3: "conference-speaker",
+                4: "team-building",
+                5: "music-fest",
               };
 
-              const activityRoute = routeMap[activity.title] || "";
+              const activityRoute = routeMap[activity.id] || "";
 
               return (
                 <Link
-                  href={activityRoute ? `/activity/${activityRoute}` : "#"}
                   key={activity.id}
-                  className="block"
+                  href={activityRoute ? `/activity/${activityRoute}` : "#"}
+                  className="group relative block break-inside-avoid mb-4 overflow-hidden rounded-2xl shadow-lg"
+                  style={{ border: "1px solid #BFBCBA" }}
                 >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`relative group cursor-pointer overflow-hidden rounded-lg ${activity.className}`}
-                    style={{ border: "1px solid #BFBCBA" }}
-                  >
-                    {/* Image */}
-                    <div className="absolute inset-0 z-0">
-                      <img
-                        src={activity.image}
-                        alt={activity.title}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                      />
-                    </div>
+                  {/* Image: Natural Height (h-auto) */}
+                  <img
+                    src={activity.image}
+                    alt={activity.title}
+                    className="w-full h-auto block transition-transform duration-700 ease-in-out group-hover:scale-110"
+                  />
 
-                    {/* Overlay - Always visible but darker on hover */}
-                    <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/30 to-transparent group-hover:from-black/95 group-hover:via-black/60 transition-all duration-300" />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    {/* Content - Always visible */}
-                    <div className="absolute inset-0 z-20 flex flex-col justify-end p-6">
-                      <div className="transform group-hover:translate-y-0 transition-transform duration-300">
-                        <div
-                          className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full"
-                          style={{
-                            backgroundColor: "rgba(255, 255, 255, 0.25)",
-                            backdropFilter: "blur(10px)",
-                            color: "#FFFFFF",
-                          }}
-                        >
-                          {activity.icon}
-                          <span className="text-sm font-medium">{activity.title}</span>
-                        </div>
-                        <h3
-                          className="font-playfair text-2xl md:text-3xl font-bold mb-2"
-                          style={{ color: "#FFFFFF" }}
-                        >
-                          {activity.title}
-                        </h3>
-                        <p
-                          className="text-sm md:text-base line-clamp-2 opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                          style={{ color: "#FFFFFF" }}
-                        >
-                          {activity.short_description}
-                        </p>
-                      </div>
+                  {/* Text Content */}
+                  <div className="absolute bottom-0 left-0 p-4 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <div className="flex items-center gap-2" style={{ color: "#F2E9E4" }}>
+                      <span
+                        className="bg-white/20 p-1.5 rounded-full backdrop-blur-sm scale-90"
+                        style={{ color: "#FFFFFF" }}
+                      >
+                        {activity.icon}
+                      </span>
+                      <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "#FFFFFF" }}>
+                        {activity.title}
+                      </h3>
                     </div>
-                  </motion.div>
+                  </div>
                 </Link>
               );
             })}
@@ -295,14 +276,14 @@ export default function Home() {
             className="font-playfair text-4xl md:text-5xl font-bold mb-12 text-center"
             style={{ color: "#0D0D0D" }}
           >
-            Latest News
+            {t("home.latestNews")}
           </motion.h2>
 
           {loadingNews ? (
             <div className="text-center py-12">
               <div className="inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full animate-spin" style={{ color: "#737272" }} />
               <p className="mt-4" style={{ color: "#737272" }}>
-                Loading news...
+                {t("common.loading")}
               </p>
             </div>
           ) : newsError ? (
@@ -311,7 +292,7 @@ export default function Home() {
             </div>
           ) : news.length === 0 ? (
             <div className="text-center py-12">
-              <p style={{ color: "#737272" }}>No news articles available yet.</p>
+              <p style={{ color: "#737272" }}>{t("news.empty")}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -381,7 +362,7 @@ export default function Home() {
                         e.currentTarget.style.color = "#403F3D";
                       }}
                     >
-                      Read More
+                      {t("common.readMore")}
                       <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
@@ -408,7 +389,7 @@ export default function Home() {
                   e.currentTarget.style.backgroundColor = "#FFFFFF";
                 }}
               >
-                View All News
+                {t("common.viewAll")} {t("nav.news")}
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

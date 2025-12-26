@@ -3,8 +3,10 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { User, Phone, Mail, Calendar, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function BookingForm() {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     full_name: "",
     phone: "",
@@ -79,7 +81,7 @@ export default function BookingForm() {
             className="text-3xl font-bold mb-6"
             style={{ color: "#403F3D", fontFamily: "var(--font-playfair), serif" }}
           >
-            Book Your Event
+            {t("booking.title")}
           </h2>
 
           {submitStatus === "success" && (
@@ -89,7 +91,7 @@ export default function BookingForm() {
             >
               <CheckCircle className="w-5 h-5" style={{ color: "#403F3D" }} />
               <p style={{ color: "#0D0D0D" }}>
-                Booking submitted successfully! We&apos;ll contact you soon.
+                {t("booking.success")}
               </p>
             </div>
           )}
@@ -100,7 +102,7 @@ export default function BookingForm() {
               style={{ backgroundColor: "#F2E9E4", border: "1px solid #BFBCBA" }}
             >
               <AlertCircle className="w-5 h-5" style={{ color: "#737272" }} />
-              <p style={{ color: "#0D0D0D" }}>{errorMessage}</p>
+              <p style={{ color: "#0D0D0D" }}>{errorMessage || t("booking.error")}</p>
             </div>
           )}
 
@@ -112,7 +114,7 @@ export default function BookingForm() {
                 className="block text-sm font-medium mb-2"
                 style={{ color: "#0D0D0D" }}
               >
-                Full Name
+                {t("booking.fullName")}
               </label>
               <div className="relative">
                 <User
@@ -132,7 +134,7 @@ export default function BookingForm() {
                     backgroundColor: "#FFFFFF",
                     color: "#0D0D0D",
                   }}
-                  placeholder="Enter your full name"
+                  placeholder={t("booking.fullNamePlaceholder")}
                 />
               </div>
             </div>
@@ -144,7 +146,7 @@ export default function BookingForm() {
                 className="block text-sm font-medium mb-2"
                 style={{ color: "#0D0D0D" }}
               >
-                Phone Number
+                {t("booking.phone")}
               </label>
               <div className="relative">
                 <Phone
@@ -164,7 +166,7 @@ export default function BookingForm() {
                     backgroundColor: "#FFFFFF",
                     color: "#0D0D0D",
                   }}
-                  placeholder="Enter your phone number"
+                  placeholder={t("booking.phonePlaceholder")}
                 />
               </div>
             </div>
@@ -176,7 +178,7 @@ export default function BookingForm() {
                 className="block text-sm font-medium mb-2"
                 style={{ color: "#0D0D0D" }}
               >
-                Email Address
+                {t("booking.email")}
               </label>
               <div className="relative">
                 <Mail
@@ -196,7 +198,7 @@ export default function BookingForm() {
                     backgroundColor: "#FFFFFF",
                     color: "#0D0D0D",
                   }}
-                  placeholder="Enter your email address"
+                  placeholder={t("booking.emailPlaceholder")}
                 />
               </div>
             </div>
@@ -208,7 +210,7 @@ export default function BookingForm() {
                 className="block text-sm font-medium mb-2"
                 style={{ color: "#0D0D0D" }}
               >
-                Preferred Date
+                {t("booking.date")}
               </label>
               <div className="relative">
                 <Calendar
@@ -240,7 +242,7 @@ export default function BookingForm() {
                 className="block text-sm font-medium mb-2"
                 style={{ color: "#0D0D0D" }}
               >
-                Additional Notes
+                {t("booking.notes")}
               </label>
               <div className="relative">
                 <FileText
@@ -259,7 +261,7 @@ export default function BookingForm() {
                     backgroundColor: "#FFFFFF",
                     color: "#0D0D0D",
                   }}
-                  placeholder="Tell us about your event (optional)"
+                  placeholder={t("booking.notesPlaceholder")}
                 />
               </div>
             </div>
@@ -284,7 +286,7 @@ export default function BookingForm() {
                 }
               }}
             >
-              {isSubmitting ? "Submitting..." : "Submit Booking"}
+              {isSubmitting ? t("booking.submitting") : t("booking.submit")}
             </button>
           </form>
         </div>

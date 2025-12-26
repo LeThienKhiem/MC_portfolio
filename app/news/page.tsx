@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { supabase, type News } from "@/lib/supabase";
 import { RefreshCw } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mark as dynamic to prevent static generation issues
 export const dynamic = 'force-dynamic';
@@ -17,6 +18,7 @@ const fallbackImages = [
 ];
 
 export default function News() {
+  const { t } = useLanguage();
   const [news, setNews] = useState<News[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,25 +57,25 @@ export default function News() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <h1 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
-          News
+          {t("news.title")}
         </h1>
         <p className="text-lg mb-12" style={{ color: "#737272" }}>
-          Stay updated with the latest insights and event coverage
+          {t("news.subtitle")}
         </p>
 
         {/* News Grid */}
         {loading ? (
           <div className="text-center py-12">
             <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: "#737272" }} />
-            <p style={{ color: "#737272" }}>Loading news...</p>
+            <p style={{ color: "#737272" }}>{t("news.loading")}</p>
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <p style={{ color: "#737272" }}>{error}</p>
+            <p style={{ color: "#737272" }}>{error || t("news.error")}</p>
           </div>
         ) : news.length === 0 ? (
           <div className="text-center py-12">
-            <p style={{ color: "#737272" }}>No news articles available yet.</p>
+            <p style={{ color: "#737272" }}>{t("news.empty")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
