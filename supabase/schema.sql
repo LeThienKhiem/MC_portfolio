@@ -35,3 +35,4 @@ CREATE POLICY "Allow authenticated update" ON bookings
   FOR UPDATE
   USING (true);
 
+

@@ -93,25 +93,27 @@ export default function AdminDashboard() {
 
         {/* Tabs */}
         <div className="mb-6 border-b" style={{ borderColor: "#BFBCBA" }}>
-          <div className="flex gap-1">
-            <TabButton
-              icon={<LayoutDashboard className="w-4 h-4" />}
-              label="Bookings"
-              isActive={activeTab === "bookings"}
-              onClick={() => setActiveTab("bookings")}
-            />
-            <TabButton
-              icon={<ImageIcon className="w-4 h-4" />}
-              label="Media Manager"
-              isActive={activeTab === "media"}
-              onClick={() => setActiveTab("media")}
-            />
-            <TabButton
-              icon={<Newspaper className="w-4 h-4" />}
-              label="News Editor"
-              isActive={activeTab === "news"}
-              onClick={() => setActiveTab("news")}
-            />
+          <div className="overflow-x-auto -mx-4 px-4">
+            <div className="flex gap-1 min-w-max">
+              <TabButton
+                icon={<LayoutDashboard className="w-4 h-4" />}
+                label="Bookings"
+                isActive={activeTab === "bookings"}
+                onClick={() => setActiveTab("bookings")}
+              />
+              <TabButton
+                icon={<ImageIcon className="w-4 h-4" />}
+                label="Media Manager"
+                isActive={activeTab === "media"}
+                onClick={() => setActiveTab("media")}
+              />
+              <TabButton
+                icon={<Newspaper className="w-4 h-4" />}
+                label="News Editor"
+                isActive={activeTab === "news"}
+                onClick={() => setActiveTab("news")}
+              />
+            </div>
           </div>
         </div>
 

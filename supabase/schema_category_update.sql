@@ -35,3 +35,4 @@ COMMENT ON COLUMN media.category IS 'Valid categories: TV Host, Event Master, Co
 -- SET category = 'Event Master' 
 -- WHERE category = 'Event Speaker';
 
+
