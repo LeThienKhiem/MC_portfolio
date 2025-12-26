@@ -118,7 +118,7 @@ export default function AboutPage() {
                 style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
               >
                 With over a decade of experience in the entertainment industry, MC Đào Duy has
-                established himself as one of Vietnam's most versatile and charismatic event hosts.
+                established himself as one of Vietnam&apos;s most versatile and charismatic event hosts.
                 His dynamic presence and exceptional ability to connect with audiences have made him
                 a sought-after professional for everything from intimate corporate gatherings to
                 grand-scale televised events.

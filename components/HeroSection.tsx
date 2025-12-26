@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 const images = [
@@ -34,10 +35,13 @@ export default function HeroSection() {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0 z-0"
         >
-          <img
+          <Image
             src={images[currentIndex]}
             alt={`Background ${currentIndex + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
+            fill
+            className="object-cover"
+            priority={currentIndex === 0}
+            unoptimized
           />
         </motion.div>
       </AnimatePresence>

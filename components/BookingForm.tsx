@@ -82,7 +82,7 @@ export default function BookingForm() {
             >
               <CheckCircle className="w-5 h-5" style={{ color: "#403F3D" }} />
               <p style={{ color: "#0D0D0D" }}>
-                Booking submitted successfully! We'll contact you soon.
+                Booking submitted successfully! We&apos;ll contact you soon.
               </p>
             </div>
           )}
