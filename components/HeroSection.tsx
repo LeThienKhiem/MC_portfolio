@@ -56,7 +56,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-playfair text-4xl md:text-6xl lg:text-7xl font-bold text-gold mb-4"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-gold mb-4"
           >
             THE SOUL OF THE EVENT
           </motion.h1>

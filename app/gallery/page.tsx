@@ -174,7 +174,7 @@ export default function Gallery() {
     <div className="min-h-screen pt-20 px-4 pb-20" style={{ backgroundColor: "#F2E9E4" }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
           {t("gallery.title")}
         </h1>
         <p className="text-lg mb-8" style={{ color: "#737272" }}>
@@ -287,7 +287,7 @@ export default function Gallery() {
 
                 {/* Image Title */}
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
-                  <h3 className="font-playfair text-2xl font-bold mb-2" style={{ color: "#FFFFFF" }}>
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: "#FFFFFF" }}>
                     {selectedImage.title}
                   </h3>
                   <p style={{ color: "#A1A1AA" }}>{selectedImage.category}</p>

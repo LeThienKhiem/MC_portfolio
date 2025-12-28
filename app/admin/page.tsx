@@ -65,7 +65,7 @@ export default function AdminDashboard() {
           <div>
             <h1
               className="text-4xl font-bold mb-2"
-              style={{ color: "#403F3D", fontFamily: "var(--font-playfair), serif" }}
+              style={{ color: "#403F3D" }}
             >
               Admin Dashboard
             </h1>

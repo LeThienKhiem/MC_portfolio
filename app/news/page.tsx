@@ -56,7 +56,7 @@ export default function News() {
     <div className="min-h-screen pt-20 px-4 pb-20" style={{ backgroundColor: "#F2E9E4" }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="font-playfair text-4xl md:text-5xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
+        <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
           {t("news.title")}
         </h1>
         <p className="text-lg mb-12" style={{ color: "#737272" }}>
@@ -133,7 +133,7 @@ export default function News() {
 
                     {/* Title */}
                     <h2
-                      className="font-playfair text-xl font-bold mb-3 line-clamp-2"
+                      className="text-xl font-bold mb-3 line-clamp-2"
                       style={{ color: "#0D0D0D" }}
                     >
                       {article.title}

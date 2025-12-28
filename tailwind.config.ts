@@ -18,8 +18,8 @@ const config: Config = {
         "primary-button": "#403F3D",
       },
       fontFamily: {
-        playfair: ["var(--font-playfair)", "serif"],
-        inter: ["var(--font-inter)", "sans-serif"],
+        sans: ["-apple-system", "BlinkMacSystemFont", "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
+        display: ["-apple-system", "BlinkMacSystemFont", "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
       },
     },
   },

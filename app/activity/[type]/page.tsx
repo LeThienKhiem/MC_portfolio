@@ -206,9 +206,7 @@ export default function ActivityDetailPage() {
           className="mb-12"
         >
           <h1
-            className={`text-5xl md:text-7xl font-bold mb-6 ${
-              theme.headerFont === "serif" ? "font-playfair" : ""
-            }`}
+            className="text-5xl md:text-7xl font-bold mb-6"
             style={{ color: theme.textColor }}
           >
             {title}

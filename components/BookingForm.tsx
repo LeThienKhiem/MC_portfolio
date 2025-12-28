@@ -79,7 +79,7 @@ export default function BookingForm() {
         >
           <h2
             className="text-3xl font-bold mb-6"
-            style={{ color: "#403F3D", fontFamily: "var(--font-playfair), serif" }}
+            style={{ color: "#403F3D" }}
           >
             {t("booking.title")}
           </h2>

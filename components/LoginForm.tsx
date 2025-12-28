@@ -49,7 +49,7 @@ export default function LoginForm() {
           <div className="text-center mb-8">
             <h1
               className="text-3xl font-bold mb-2"
-              style={{ color: "#403F3D", fontFamily: "var(--font-playfair), serif" }}
+              style={{ color: "#403F3D" }}
             >
               Admin Login
             </h1>
@@ -173,5 +173,7 @@ export default function LoginForm() {
     </div>
   );
 }
+
+
 
 

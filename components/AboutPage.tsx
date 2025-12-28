@@ -67,7 +67,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="font-playfair text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-none"
+              className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-none"
               style={{
                 color: "#0D0D0D",
                 textShadow: "2px 2px 4px rgba(0,0,0,0.1)",
@@ -104,19 +104,19 @@ export default function AboutPage() {
             >
               <p
                 className="text-lg leading-relaxed"
-                style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
+                style={{ color: "#737272" }}
               >
                 {t("about.bio1")}
               </p>
               <p
                 className="text-lg leading-relaxed"
-                style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
+                style={{ color: "#737272" }}
               >
                 {t("about.bio2")}
               </p>
               <p
                 className="text-lg leading-relaxed"
-                style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
+                style={{ color: "#737272" }}
               >
                 {t("about.bio3")}
               </p>

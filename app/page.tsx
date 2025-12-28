@@ -71,6 +71,7 @@ export default function Home() {
   const [news, setNews] = useState<News[]>([]);
   const [loadingNews, setLoadingNews] = useState(true);
   const [newsError, setNewsError] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<number>(1); // Default open first one
 
   const activities: ActivityItem[] = [
     {
@@ -159,7 +160,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="font-playfair text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-none"
+            className="text-6xl md:text-8xl lg:text-9xl font-bold mb-6 leading-none"
             style={{ color: "#0D0D0D" }}
           >
             MC DAO DUY
@@ -169,7 +170,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl mb-8"
-            style={{ color: "#737272", fontFamily: "var(--font-inter), sans-serif" }}
+            style={{ color: "#737272" }}
           >
             {t("home.subtitle")}
           </motion.p>
@@ -199,23 +200,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Activity Gallery - Bento Grid */}
-      <section className="py-20 px-4">
+      {/* Activity Gallery - Cinematic Expandable Gallery */}
+      <section className="py-20 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="font-playfair text-4xl md:text-5xl font-bold mb-12 text-center"
+            className="text-4xl md:text-5xl font-bold mb-12 text-center"
             style={{ color: "#0D0D0D" }}
           >
             {t("home.whatIDo")}
           </motion.h2>
 
-          {/* Masonry Layout Container for Activities ONLY */}
-          <div className="columns-1 md:columns-5 gap-4 space-y-4 px-4 md:px-0">
-            {activities.map((activity, index) => {
+          {/* EXPANDABLE GALLERY CONTAINER */}
+          <div className="flex flex-col md:flex-row min-h-[500px] gap-4 w-full">
+            {activities.map((activity) => {
               // Map activity IDs to route types
               const routeMap: Record<number, string> = {
                 1: "tv-host",
@@ -226,37 +227,51 @@ export default function Home() {
               };
 
               const activityRoute = routeMap[activity.id] || "";
+              const isActive = activeId === activity.id;
 
               return (
                 <Link
                   key={activity.id}
                   href={activityRoute ? `/activity/${activityRoute}` : "#"}
-                  className="group relative block break-inside-avoid mb-4 overflow-hidden rounded-2xl shadow-lg"
-                  style={{ border: "1px solid #BFBCBA" }}
+                  onMouseEnter={() => setActiveId(activity.id)}
+                  className={`relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out shadow-xl
+                    ${isActive ? 'flex-[3] grayscale-0' : 'flex-[1] grayscale opacity-80 hover:opacity-100'}
+                  `}
                 >
-                  {/* Image: Natural Height (h-auto) */}
+                  {/* Background Image */}
                   <img
                     src={activity.image}
                     alt={activity.title}
-                    className="w-full h-auto block transition-transform duration-700 ease-in-out group-hover:scale-110"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
 
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                  {/* Gradient Overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500
+                    ${isActive ? 'opacity-90' : 'opacity-60'}
+                  `}></div>
 
-                  {/* Text Content */}
-                  <div className="absolute bottom-0 left-0 p-4 w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="flex items-center gap-2" style={{ color: "#F2E9E4" }}>
-                      <span
-                        className="bg-white/20 p-1.5 rounded-full backdrop-blur-sm scale-90"
-                        style={{ color: "#FFFFFF" }}
-                      >
+                  {/* Content Positioned at Bottom */}
+                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 whitespace-nowrap overflow-hidden">
+                    {/* Icon & Title */}
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className={`p-3 rounded-full backdrop-blur-md transition-all duration-500
+                        ${isActive ? 'bg-[#F2E9E4] text-[#0D0D0D]' : 'bg-white/20 text-white'}
+                      `}>
                         {activity.icon}
                       </span>
-                      <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "#FFFFFF" }}>
+                      <h3 className={`text-xl md:text-3xl font-bold uppercase tracking-tighter text-white transition-all duration-300
+                        ${isActive ? 'opacity-100 translate-x-0' : 'opacity-80 -translate-x-2 hidden md:block'}
+                      `}>
                         {activity.title}
                       </h3>
                     </div>
+
+                    {/* Description - Only visible when active */}
+                    <p className={`text-gray-300 text-sm md:text-base font-light max-w-lg transition-all duration-500 delay-100 whitespace-normal
+                      ${isActive ? 'opacity-100 translate-y-0 visible' : 'opacity-0 translate-y-4 invisible h-0'}
+                    `}>
+                      {activity.short_description || "Professional MC services tailored for your events."}
+                    </p>
                   </div>
                 </Link>
               );
@@ -273,7 +288,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="font-playfair text-4xl md:text-5xl font-bold mb-12 text-center"
+            className="text-4xl md:text-5xl font-bold mb-12 text-center"
             style={{ color: "#0D0D0D" }}
           >
             {t("home.latestNews")}
@@ -340,7 +355,7 @@ export default function Home() {
                       </time>
                     </div>
                     <h3
-                      className="font-playfair text-xl font-bold mb-3 line-clamp-2"
+                      className="text-xl font-bold mb-3 line-clamp-2"
                       style={{ color: "#0D0D0D" }}
                     >
                       {article.title}
