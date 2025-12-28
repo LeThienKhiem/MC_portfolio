@@ -14,7 +14,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="relative grid md:grid-cols-2 gap-8 md:gap-12 items-center min-h-[80vh]">
           {/* Left: Portrait Image */}
-          <div className="relative order-2 md:order-1">
+          <div className="relative order-1 md:order-1">
             <div className="relative w-full aspect-[3/4] max-w-md mx-auto">
               {/* Decorative Sunburst/Star Icon */}
               <motion.div
@@ -61,7 +61,7 @@ export default function AboutPage() {
           </div>
 
           {/* Right: Content */}
-          <div className="order-1 md:order-2 relative z-10">
+          <div className="order-2 md:order-2 relative z-10">
             {/* Large Overlapping Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
