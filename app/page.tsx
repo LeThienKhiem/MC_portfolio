@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Calendar, Mic, Video, Users, Sparkles, Tv, Music } from "lucide-react";
-import { supabase, type News } from "@/lib/supabase";
+import { supabase, type News, type Media } from "@/lib/supabase";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Mark as dynamic to prevent static generation issues
@@ -19,6 +19,89 @@ type ActivityItem = {
   icon: React.ReactNode;
   className: string;
 };
+
+type ImageItem = {
+  id: number;
+  src: string;
+  category: string;
+  title: string;
+};
+
+// Fallback gallery images (same as Gallery page)
+const fallbackGalleryImages: ImageItem[] = [
+  {
+    id: 1,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/daoduymc.png",
+    category: "TV Host",
+    title: "Television Studio",
+  },
+  {
+    id: 2,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/mcdaoduy-1-ngoisao.vn_1.jpg",
+    category: "TV Host",
+    title: "On-Air Presentation",
+  },
+  {
+    id: 3,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/mcdaoduy-5-ngoisao.vn_1.jpg",
+    category: "Event Master",
+    title: "Elegant Gala Evening",
+  },
+  {
+    id: 4,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/vui-fest-fpt.jpg",
+    category: "Event Master",
+    title: "Luxury Event Setup",
+  },
+  {
+    id: 5,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/sddefault.jpg",
+    category: "Event Master",
+    title: "Formal Dinner Event",
+  },
+  {
+    id: 6,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/469176626_122124140288551154_3107982728511076430_n.jpg",
+    category: "Conference Speaker",
+    title: "Business Conference",
+  },
+  {
+    id: 7,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/3RDtYmUyrVsJZdBzD3rb6E.jpg",
+    category: "Conference Speaker",
+    title: "Professional Speaking",
+  },
+  {
+    id: 8,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/1-2-100301.jpg",
+    category: "Conference Speaker",
+    title: "Corporate Presentation",
+  },
+  {
+    id: 9,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/Baja-Beach-Fest-anuncia-la-fecha-de-su-edicion-2026-y-lanza-primeros-boletos-1280x720.jpg",
+    category: "Team Building",
+    title: "Team Activity",
+  },
+  {
+    id: 10,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/Concert.jpg",
+    category: "Team Building",
+    title: "Group Engagement",
+  },
+  {
+    id: 11,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/getty_499517325_111264.webp",
+    category: "Team Building",
+    title: "Corporate Team Event",
+  },
+  {
+    id: 12,
+    src: "https://fkhlijhqhxsmwwoxobmp.supabase.co/storage/v1/object/public/Image/nhung-loi-ich-bat-ngo-khi-to-chuc-hoat-dong-team-building.webp",
+    category: "Team Building",
+    title: "Interactive Workshop",
+  },
+];
 
 // Activities will be created inside component to use translations
 
@@ -71,7 +154,8 @@ export default function Home() {
   const [news, setNews] = useState<News[]>([]);
   const [loadingNews, setLoadingNews] = useState(true);
   const [newsError, setNewsError] = useState<string | null>(null);
-  const [activeId, setActiveId] = useState<number>(1); // Default open first one
+  const [galleryImages, setGalleryImages] = useState<ImageItem[]>([]);
+  const [loadingGallery, setLoadingGallery] = useState(true);
 
   const activities: ActivityItem[] = [
     {
@@ -116,6 +200,7 @@ export default function Home() {
     },
   ];
 
+
   useEffect(() => {
     const fetchNews = async () => {
       if (!supabase) {
@@ -145,6 +230,59 @@ export default function Home() {
     };
 
     fetchNews();
+  }, []);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      console.log("Fetching images for Home Gallery...");
+
+      try {
+        setLoadingGallery(true);
+
+        // Try to fetch from Supabase first
+        if (supabase) {
+          const { data, error } = await supabase
+            .from("media")
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(12);
+
+          if (error) {
+            console.error("Error fetching images from Supabase:", error);
+            console.log("Using fallback gallery images");
+            // Use fallback images if Supabase fails
+            setGalleryImages(fallbackGalleryImages.slice(0, 12));
+          } else if (data && data.length > 0) {
+            console.log("Found images from Supabase:", data.length);
+            // Map Media data to ImageItem format (matching Gallery page structure)
+            const mappedImages: ImageItem[] = data.map((item: Media) => ({
+              id: item.id,
+              src: item.url, // Map url to src
+              category: item.category || "Gallery",
+              title: item.caption || item.category || "Gallery Image",
+            }));
+            setGalleryImages(mappedImages);
+          } else {
+            console.log("No images found in Supabase 'media' table. Using fallback images.");
+            // Use fallback images if database is empty
+            setGalleryImages(fallbackGalleryImages.slice(0, 12));
+          }
+        } else {
+          console.log("Supabase not configured. Using fallback gallery images");
+          // Use fallback images if Supabase is not configured
+          setGalleryImages(fallbackGalleryImages.slice(0, 12));
+        }
+      } catch (err: any) {
+        console.error("Failed to fetch gallery images:", err);
+        console.log("Using fallback gallery images due to error");
+        // Use fallback images on any error
+        setGalleryImages(fallbackGalleryImages.slice(0, 12));
+      } finally {
+        setLoadingGallery(false);
+      }
+    };
+
+    fetchImages();
   }, []);
 
   return (
@@ -200,90 +338,90 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Activity Gallery - Cinematic Expandable Gallery */}
-      <section className="py-20 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
+      {/* WHAT I DO SECTION - Editorial Zig-Zag Layout */}
+      <section className="py-24 px-6 md:px-12 bg-[#F2E9E4] overflow-hidden">
+        <div className="container mx-auto space-y-24 md:space-y-32">
+          
+          {/* Section Header */}
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold mb-12 text-center"
-            style={{ color: "#0D0D0D" }}
+            className="text-center max-w-3xl mx-auto mb-16"
           >
-            {t("home.whatIDo")}
-          </motion.h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#0D0D0D] mb-6 tracking-tight">
+              {t("home.whatIDo")}
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Sự chuyên nghiệp và tận tâm trong từng khoảnh khắc, mang đến thành công cho mọi sự kiện.
+            </p>
+          </motion.div>
 
-          {/* EXPANDABLE GALLERY CONTAINER */}
-          <div className="flex flex-col md:flex-row h-auto md:h-[500px] gap-4 w-full">
-            {activities.map((activity) => {
-              // Map activity IDs to route types
-              const routeMap: Record<number, string> = {
-                1: "tv-host",
-                2: "event-speaker",
-                3: "conference-speaker",
-                4: "team-building",
-                5: "music-fest",
-              };
+          {/* ZIG-ZAG LIST */}
+          {activities.map((item, index) => {
+            // Map activity IDs to route types
+            const routeMap: Record<number, string> = {
+              1: "tv-host",
+              2: "event-speaker",
+              3: "conference-speaker",
+              4: "team-building",
+              5: "music-fest",
+            };
 
-              const activityRoute = routeMap[activity.id] || "";
-              const isActive = activeId === activity.id;
+            const activityRoute = routeMap[item.id] || "";
 
-              return (
-                <Link
-                  key={activity.id}
-                  href={activityRoute ? `/activity/${activityRoute}` : "#"}
-                  onMouseEnter={() => setActiveId(activity.id)}
-                  className={`relative rounded-3xl overflow-hidden cursor-pointer transition-all duration-700 ease-in-out shadow-xl
-                    w-full h-[400px] grayscale-0 opacity-100
-                    md:h-auto md:w-auto
-                    ${isActive 
-                      ? 'md:flex-[3] md:grayscale-0' 
-                      : 'md:flex-[1] md:grayscale md:opacity-80 hover:md:opacity-100'}
-                  `}
-                >
-                  {/* Background Image */}
-                  <img
-                    src={activity.image}
-                    alt={activity.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500
-                    opacity-90 ${isActive ? 'md:opacity-90' : 'md:opacity-60'}
-                  `}></div>
-
-                  {/* Content Positioned at Bottom */}
-                  <div className="absolute bottom-0 left-0 w-full p-6 md:p-8 whitespace-nowrap overflow-hidden">
-                    {/* Icon & Title */}
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className={`p-3 rounded-full backdrop-blur-md transition-all duration-500
-                        bg-[#F2E9E4] text-[#0D0D0D]
-                        ${isActive ? 'md:bg-[#F2E9E4] md:text-[#0D0D0D]' : 'md:bg-white/20 md:text-white'}
-                      `}>
-                        {activity.icon}
-                      </span>
-                      <h3 className={`text-xl md:text-3xl font-bold uppercase tracking-tighter text-white transition-all duration-300
-                        opacity-100 translate-x-0 block
-                        ${isActive ? 'md:opacity-100 md:translate-x-0' : 'md:opacity-80 md:-translate-x-2 md:hidden'}
-                      `}>
-                        {activity.title}
-                      </h3>
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 ${
+                  index % 2 === 1 ? "md:flex-row-reverse" : ""
+                }`}
+              >
+                {/* IMAGE SIDE (50%) */}
+                <div className="w-full md:w-1/2 group">
+                  <Link
+                    href={activityRoute ? `/activity/${activityRoute}` : "#"}
+                    className="block overflow-hidden rounded-3xl shadow-2xl relative"
+                  >
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-[300px] md:h-[400px] object-cover transform transition-transform duration-1000 group-hover:scale-105"
+                    />
+                    {/* Small Icon Badge */}
+                    <div className="absolute top-6 left-6 z-20 bg-white/90 backdrop-blur p-3 rounded-full shadow-lg text-[#0D0D0D]">
+                      {item.icon}
                     </div>
+                  </Link>
+                </div>
 
-                    {/* Description */}
-                    <p className={`text-gray-300 text-sm md:text-base font-light max-w-lg transition-all duration-500 delay-100 whitespace-normal
-                      opacity-100 translate-y-0 visible h-auto
-                      ${isActive ? 'md:opacity-100 md:translate-y-0 md:visible' : 'md:opacity-0 md:translate-y-4 md:invisible md:h-0'}
-                    `}>
-                      {activity.short_description || "Professional MC services tailored for your events."}
-                    </p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                {/* TEXT SIDE (50%) */}
+                <div className="w-full md:w-1/2 text-center md:text-left">
+                  <h3 className="text-3xl md:text-4xl font-bold text-[#0D0D0D] mb-4 uppercase">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                    {item.short_description ||
+                      "Mô tả chi tiết về dịch vụ này sẽ giúp khách hàng hiểu rõ hơn về giá trị mà bạn mang lại."}
+                  </p>
+
+                  <Link
+                    href={activityRoute ? `/activity/${activityRoute}` : "#"}
+                    className="inline-flex items-center gap-2 text-[#0D0D0D] font-bold uppercase tracking-widest border-b-2 border-[#0D0D0D] pb-1 hover:text-gray-600 hover:border-gray-400 transition-all"
+                  >
+                    {t("common.readMore")}
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -415,6 +553,69 @@ export default function Home() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
+          )}
+        </div>
+      </section>
+
+      {/* Image Gallery Section - Masonry Layout */}
+      <section className="py-20 px-4 md:px-8 bg-[#F2E9E4]">
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-[#0D0D0D] tracking-tight mb-2">
+              THƯ VIỆN HÌNH ẢNH
+            </h2>
+            <p className="text-[#737272] text-lg">Những khoảnh khắc đáng nhớ</p>
+          </motion.div>
+
+          {loadingGallery ? (
+            <div className="text-center py-12">
+              <div className="inline-block w-8 h-8 border-4 border-current border-t-transparent rounded-full animate-spin" style={{ color: "#737272" }} />
+              <p className="mt-4" style={{ color: "#737272" }}>
+                {t("common.loading")}
+              </p>
+            </div>
+          ) : galleryImages.length === 0 ? (
+            <div className="text-center py-12">
+              <p style={{ color: "#737272" }}>Chưa có hình ảnh nào</p>
+            </div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="columns-2 md:columns-4 gap-4 space-y-4"
+            >
+              {galleryImages.map((img) => (
+                <motion.div
+                  key={img.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="break-inside-avoid relative group rounded-xl overflow-hidden mb-4 cursor-zoom-in shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
+                >
+                  <img
+                    src={img.src}
+                    alt={img.title}
+                    className="w-full h-auto block transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <p className="text-white text-sm font-medium px-2 text-center">
+                      {img.category}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
           )}
         </div>
       </section>
